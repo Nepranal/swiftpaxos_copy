@@ -42,6 +42,8 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	fmt.Println("Writes: ", c.Writes)
+	fmt.Println("Conflicts: ", c.Conflicts)
 
 	if *protocol != "" {
 		c.Protocol = *protocol
