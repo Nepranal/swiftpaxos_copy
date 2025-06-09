@@ -99,7 +99,7 @@ func (c *BufferClient) Loop() {
 	var cmdM sync.Mutex
 	cmdNum := int32(0)
 	wait := make(chan struct{}, 0)
-	go func() {
+	go func() { //For processing received message
 		for i := 0; i <= c.reqNum; i++ {
 			r := <-c.Reply
 			// Ignore first request

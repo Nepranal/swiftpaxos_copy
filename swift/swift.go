@@ -11,7 +11,7 @@ import (
 	"github.com/imdea-software/swiftpaxos/replica"
 	"github.com/imdea-software/swiftpaxos/replica/defs"
 	"github.com/imdea-software/swiftpaxos/state"
-	"github.com/orcaman/concurrent-map"
+	cmap "github.com/orcaman/concurrent-map"
 )
 
 type Replica struct {
@@ -268,10 +268,10 @@ func (r *Replica) run() {
 			r.reinitNewLeaderAckNs()
 			r.handleNewLeader(newLeader)
 
-		case cmdId := <-r.deliverChan:
+		case cmdId := <-r.deliverChan: // Not the contact point of client
 			r.getCmdDesc(cmdId, "deliver", nil)
 
-		case propose := <-r.ProposeChan:
+		case propose := <-r.ProposeChan: // Contact point of client
 			cmdId.ClientId = propose.ClientId
 			cmdId.SeqNum = propose.CommandId
 			r.proposes[cmdId] = propose
@@ -288,7 +288,7 @@ func (r *Replica) run() {
 				r.Fatal("Got proposal for the delivered command", cmdId)
 			}
 
-		case m := <-r.cs.fastAckChan:
+		case m := <-r.cs.fastAckChan: //Sending fast ack
 			fastAck := m.(*MFastAck)
 			if fastAck.Replica == r.leader() && r.leader() != r.Id {
 				// TODO: again, think about pipeline.
@@ -298,7 +298,7 @@ func (r *Replica) run() {
 			r.getCmdDescSeq(fastAck.CmdId, fastAck, nil, nil, r.leader() == r.Id)
 			// r.getCmdDescSeq(fastAck.CmdId, fastAck, nil, nil, false)
 
-		case m := <-r.cs.lightSlowAckChan:
+		case m := <-r.cs.lightSlowAckChan: // Send light slow ack
 			lightSlowAck := m.(*MLightSlowAck)
 			r.getCmdDesc(lightSlowAck.CmdId, lightSlowAck, nil)
 
@@ -398,7 +398,7 @@ func (r *Replica) handlePropose(msg *defs.GPropose, desc *commandDesc, cmdId Com
 		if (r.Id == r.leader() && !isRead) || (isRead && desc.propose.Proxy) {
 			r.batcher.SendFastAck(fastAckSend)
 			// TODO: save old state
-			r.deliver(desc, cmdId)
+			r.deliver(desc, cmdId) // Send Reply
 		} else {
 			r.batcher.SendFastAckClient(fastAckSend, msg.ClientId)
 		}
@@ -434,6 +434,17 @@ func (r *Replica) fastAckFromLeader(msg *MFastAck, desc *commandDesc) {
 		sendSlowAck := r.leader() != r.Id && (slow || (fast && neq))
 		msgCmdId := msg.CmdId
 		msgChecksum := msg.Checksum
+
+		// fmt.Println("inequal dependencies", neq)
+		// fmt.Println("desc dep:", desc.dep)
+		// fmt.Println("dep:", dep)
+
+		// fmt.Println("SLOW:", slow)
+		// fmt.Println("leader ID vs Replica ID", r.leader(), r.Id)
+		// fmt.Println("Send slow ack?", sendSlowAck)
+		// if neq {
+		// 	time.Sleep(time.Duration(1<<63 - 1))
+		// }
 
 		defer func() {
 			if r.leader() == r.Id || r.delivered.Has(msgCmdId.String()) {

@@ -254,6 +254,7 @@ func (c *Client) GetReplyFrom(rid int) (*defs.ProposeReplyTS, error) {
 	return rep, err
 }
 
+// This is THE READ from server :)
 func (c *Client) RegisterRPCTable(t *fastrpc.Table) {
 	for i, reader := range c.readers {
 		go func(i int, reader *bufio.Reader) {
@@ -263,8 +264,10 @@ func (c *Client) RegisterRPCTable(t *fastrpc.Table) {
 					err     error
 				)
 				if msgType, err = reader.ReadByte(); err != nil {
+					// finished reading replica
 					break
 				}
+				// Past this point, there IS something from the replica
 				p, exists := t.Get(msgType)
 				if !exists {
 					c.Println("error: received unknown message:", msgType)
@@ -353,7 +356,7 @@ func (c *Client) findClosest(alive []bool) error {
 			addr = "127.0.0.1"
 		}
 
-		if addr == c.server {
+		if addr == c.server { // If addr match the proxy, then that one is the closest one
 			c.ClosestId = i
 		}
 

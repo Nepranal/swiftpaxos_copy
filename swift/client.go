@@ -52,7 +52,7 @@ func NewClient(b *client.BufferClient, repNum int) *Client {
 
 	t := fastrpc.NewTableId(defs.RPC_TABLE)
 	initCs(&c.cs, t)
-	c.RegisterRPCTable(t)
+	c.RegisterRPCTable(t) // Everyone has their own table
 
 	if c.fixedMajority {
 		// TODO: it has to be the correct majority

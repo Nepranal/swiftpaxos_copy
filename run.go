@@ -22,6 +22,14 @@ import (
 
 func runReplica(c *config.Config, logger *dlog.Logger) {
 	port := 7070
+	// port := -1
+	// if c.Alias == "comp1" {
+	// 	port = 7070
+	// } else if c.Alias == "comp2" {
+	// 	port = 7171
+	// } else {
+	// 	port = 7272
+	// }
 
 	log.Printf("Server starting on port %d", port)
 	maddr := fmt.Sprintf("%s:%d", c.MasterAddr, c.MasterPort)

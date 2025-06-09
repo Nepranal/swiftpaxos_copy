@@ -97,6 +97,7 @@ func runClient(c *config.Config, verbose bool) {
 }
 
 func runSingleClient(c *config.Config, i int, verbose bool) {
+	// Create logger for file output
 	var l *dlog.Logger
 	if i == 0 {
 		l = dlog.New(*logFile, verbose)
@@ -129,7 +130,7 @@ func runSingleClient(c *config.Config, i int, verbose bool) {
 	server := c.Proxy.ProxyOf(c.ClientAddrs[c.Alias])
 	server = c.ReplicaAddrs[server]
 	cl := client.NewClientLog(server, c.MasterAddr, c.MasterPort, c.Fast, c.Leaderless, verbose, l)
-	b := client.NewBufferClient(cl, c.Reqs, c.CommandSize, c.Conflicts, c.Writes, int64(c.Key))
+	b := client.NewBufferClient(cl, c.Reqs, c.CommandSize, c.Conflicts, c.Writes, int64(c.Key)) // Creates new client
 	if c.Pipeline {
 		b.Pipeline(c.Syncs, int32(c.Pendings))
 	}
