@@ -42,8 +42,6 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	fmt.Println("Writes: ", c.Writes)
-	fmt.Println("Conflicts: ", c.Conflicts)
 
 	if *protocol != "" {
 		c.Protocol = *protocol
@@ -133,6 +131,8 @@ func runSingleClient(c *config.Config, i int, verbose bool) {
 	server = c.ReplicaAddrs[server]
 	cl := client.NewClientLog(server, c.MasterAddr, c.MasterPort, c.Fast, c.Leaderless, verbose, l)
 	b := client.NewBufferClient(cl, c.Reqs, c.CommandSize, c.Conflicts, c.Writes, int64(c.Key)) // Creates new client
+	l.Println("Writes: ", c.Writes)
+	l.Println("Conflicts: ", c.Conflicts)
 	if c.Pipeline {
 		b.Pipeline(c.Syncs, int32(c.Pendings))
 	}

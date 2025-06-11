@@ -21,15 +21,21 @@ import (
 )
 
 func runReplica(c *config.Config, logger *dlog.Logger) {
-	port := 7070
-	// port := -1
-	// if c.Alias == "comp1" {
-	// 	port = 7070
-	// } else if c.Alias == "comp2" {
-	// 	port = 7171
-	// } else {
-	// 	port = 7272
-	// }
+	// port := 7070
+	port := -1 // For local use (but also works for non-local)
+	if c.Alias == "comp1" {
+		port = 7070
+	} else if c.Alias == "comp2" {
+		port = 7171
+	} else if c.Alias == "comp3" {
+		port = 7272
+	} else if c.Alias == "comp4" {
+		port = 7373
+	} else if c.Alias == "comp5" {
+		port = 7474
+	} else {
+		port = 7575
+	}
 
 	log.Printf("Server starting on port %d", port)
 	maddr := fmt.Sprintf("%s:%d", c.MasterAddr, c.MasterPort)
