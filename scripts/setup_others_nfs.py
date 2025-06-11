@@ -18,6 +18,8 @@ for replica in replicas:
 
 n = len(node_addresses)
 commands = [
+    "sudo umount -f -l /mnt/share/src", #If any
+    "sudo umount -f -l /mnt/share/exp",
     "sudo mkdir -p /mnt/share", #Root directory
     "sudo mkdir -p /mnt/share/src", #Code folder
     "sudo mkdir -p /mnt/share/exp", #Experiment results folder

@@ -28,8 +28,9 @@ def run(id):
     address = f"{user}@{node_address}"
 
     kill_proc(key_path, address)
-    subprocess.run(["ssh", "-i", key_path, address, f"sudo mkdir -p /mnt/share/exp/exp{experiment_number}/{protocol}/{alias}"], check=True)
-    subprocess.run(["ssh", "-i", key_path, address, f"cd /mnt/share/src/swiftpaxos_copy && swiftpaxos -run client -config aws.conf -protocol {protocol} -alias {alias} -log /mnt/share/exp/exp{experiment_number}/{protocol}/{alias}/{alias}_"], check=True)
+    subprocess.run(["ssh", "-i", key_path, address, f"sudo mkdir /mnt/share/exp/exp{experiment_number}/{protocol}/{alias}"], check=True)
+    print(f"Starting {alias} ...")
+    subprocess.run(["ssh", "-i", key_path, address, f"cd /mnt/share/src/swiftpaxos_copy && sudo ~/go/bin/swiftpaxos -run client -config aws.conf -protocol {protocol} -alias {alias} -log /mnt/share/exp/exp{experiment_number}/{protocol}/{alias}/{alias}_"], check=True)
 
 threads = []
 for i in range(n):
