@@ -1,7 +1,6 @@
 import subprocess
 from utils import read_json, read_conf
 from kill_all import kill_proc
-from threading import Thread
 
 #Run master + replica
 
@@ -36,14 +35,14 @@ for i in range(n):
 #I don't know what will happen to half-open connections
 
 #Run master
-subprocess.run(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"sudo mkdir -p /mnt/share/exp/exp{exp}"], check=True) #The experiment directory can be ignored if exist
-subprocess.run(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"sudo mkdir /mnt/share/exp/exp{exp}/{protocol} && sudo chmod 777 /mnt/share/exp/exp{exp}/{protocol}"], check=True) #This one however is stricter.
+subprocess.run(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"sudo mkdir -p /mnt/share/exp/exp{exp}"], check=True)
+subprocess.run(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"sudo mkdir -p /mnt/share/exp/exp{exp}/{protocol} && sudo chmod 777 /mnt/share/exp/exp{exp}/{protocol}"], check=True)
 subprocess.run(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"sudo cp /mnt/share/src/swiftpaxos_copy/{config_file} /mnt/share/exp/exp{exp}"], check=True)
 
 print("starting master...")
-subprocess.Popen(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"cd /mnt/share/src/swiftpaxos_copy && sudo go install . && ~/go/bin/swiftpaxos -run master -config {config_file} -protocol {protocol}"])
+subprocess.Popen(["ssh", "-i", master_key_path, f"{master_user}@{master_address}", f"cd /mnt/share/src/swiftpaxos_copy && sudo git pull && go install -buildvcs=false && ~/go/bin/swiftpaxos -run master -config {config_file} -protocol {protocol}"])
 
 # #Run replica
 for i in range(n):
     print("starting " + aliases[i])
-    subprocess.Popen(["ssh", "-i", key_paths[i], f"{users[i]}@{node_addresses[i]}", f"cd /mnt/share/src/swiftpaxos_copy && sudo go install . && ~/go/bin/swiftpaxos -run server -config {config_file} -protocol {protocol} -alias {aliases[i]}"])
+    subprocess.Popen(["ssh", "-i", key_paths[i], f"{users[i]}@{node_addresses[i]}", f"cd /mnt/share/src/swiftpaxos_copy && go install -buildvcs=false && ~/go/bin/swiftpaxos -run server -config {config_file} -protocol {protocol} -alias {aliases[i]}"])

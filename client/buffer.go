@@ -141,6 +141,7 @@ func (c *BufferClient) Loop() {
 
 		if write {
 			c.SendWrite(key, state.Value(val))
+			c.Println("Sent: ", key)
 			// TODO: if the return value != i, something's wrong
 		} else {
 			c.SendRead(key)
@@ -174,6 +175,7 @@ func (c *BufferClient) WaitReplies(waitFrom int) {
 	go func() {
 		for {
 			r, err := c.GetReplyFrom(waitFrom)
+			c.Println("reply: ", r)
 			if err != nil {
 				c.Println(err)
 				break
