@@ -87,6 +87,7 @@ func (r *Replica) handleProposal(proposal *defs.GPropose) {
 		Replica:    r.Id,
 		InstanceId: r.next - 1,
 	}
+	r.Println("Sending to all")
 	r.sender.SendToAll(m2b, r.cs.m2BRPC)
 	r.handleM2B(m2b)
 }
