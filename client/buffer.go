@@ -175,7 +175,6 @@ func (c *BufferClient) WaitReplies(waitFrom int) {
 	go func() {
 		for {
 			r, err := c.GetReplyFrom(waitFrom)
-			c.Println("reply: ", r)
 			if err != nil {
 				c.Println(err)
 				break
