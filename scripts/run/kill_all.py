@@ -1,8 +1,13 @@
 import subprocess
 from utils import read_json
+import sys
 
 def kill_proc(key_path, address):
-    commands = subprocess.run(["ssh", "-i", key_path, address, "sudo ps -ef | grep swiftpaxos"], check=True, capture_output=True).stdout.decode("utf8").split("\n")
+    try:
+        commands = subprocess.run(["ssh", "-i", key_path, address, "sudo ps -ef | grep swiftpaxos"], check=True, capture_output=True).stdout.decode("utf8").split("\n")
+    except Exception as e:
+        print(repr(e))
+        sys.exit(1)
     for command in commands:
         cmds = command.split()
         if len(cmds) >= 2:

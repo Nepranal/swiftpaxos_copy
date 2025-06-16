@@ -1,4 +1,6 @@
 import json
+import csv
+import os
 
 def read_json(path, roles):
     objs = []
@@ -19,6 +21,20 @@ def read_conf(path, key):
     val = json.load(f)[key]
     f.close()
     return val
+
+def aggregate_alias(path, variables, func):
+    f = open(path, "r")
+    reader = csv.DictReader(f)
+    for row in reader:
+        variables = func(row, variables)
+    f.close()
+    return variables
+
+def aggregate_protocol(path, variables, f):
+    aliases = [x for x in os.listdir(path) if os.path.isdir(f"{path}/{x}")]
+    for alias in aliases:
+        variables = aggregate_alias(f"{path}/{alias}/transactions.csv", variables, f)
+    return variables
 
 #Testing
 if __name__ == "__main__":

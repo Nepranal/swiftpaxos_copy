@@ -2,7 +2,6 @@ import subprocess
 from utils import read_json
 
 #Set up nfs for everyone else
-#This is supposed to only be done once
 
 replicas = read_json("scripts/conf.json", ["client"])
 mstr = read_json("scripts/conf.json", ["master"])[0]
