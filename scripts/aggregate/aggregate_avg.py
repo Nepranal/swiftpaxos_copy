@@ -1,5 +1,8 @@
 import os
 import csv
+
+import sys
+sys.path.insert(0, "./scripts")
 from utils import aggregate_protocol
 
 # Outputs a csv file 

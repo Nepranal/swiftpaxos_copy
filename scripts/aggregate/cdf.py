@@ -1,10 +1,10 @@
-import sys
-sys.path.insert(0, "/Users/pregabalin/Documents/internship/Research Internship/distributed/swiftpaxos_copy/scripts/")
-
-from math import ceil
 import os
 import csv
+
+import sys
+sys.path.insert(0, "./scripts")
 from utils import aggregate_protocol
+
 
 #Please procduce files with transactions for each alias (sorted) before using this
 #Produce a csv file for a protocol in an experiment.

@@ -1,4 +1,7 @@
 import subprocess
+
+import sys
+sys.path.insert(0, "./scripts")
 from utils import read_json
 
 #Set up nfs for everyone else
