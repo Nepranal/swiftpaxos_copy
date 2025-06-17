@@ -40,6 +40,7 @@ for protocol in protocols:
     aliases = [x for x in os.listdir(folder_path) if os.path.isdir(f"{folder_path}/{x}")]
     for alias in aliases:
         table = get_stat(experiment_number, protocol, alias)
+        table = sorted(table, key = lambda row: float(row["latency"]))
 
         folder_path = f"{ROOT_PATH}/exp{experiment_number}/{protocol}/{alias}"
         field_names = ["protocol", "alias", "command", "latency", "clone"]
