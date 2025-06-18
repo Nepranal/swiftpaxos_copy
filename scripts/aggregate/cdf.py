@@ -13,7 +13,7 @@ from utils import sorted_access
 # ROOT_PATH = "/mnt/share/exp"
 ROOT_PATH = "out"
 
-experiment_number = 8
+experiment_number = 9
 folder_path = f"{ROOT_PATH}/exp{experiment_number}"
 protocols = [x for x in os.listdir(folder_path) if os.path.isdir(f"{folder_path}/{x}")]
 
