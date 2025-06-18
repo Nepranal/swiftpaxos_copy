@@ -26,7 +26,6 @@ type Client struct {
 	*dlog.Logger
 
 	ClientId  int32
-	Alias     string
 	LeaderId  int
 	ClosestId int // also co-located
 
@@ -50,10 +49,10 @@ type Client struct {
 }
 
 func NewClient(server, maddr string, mport int, fast, leaderless, verbose bool) *Client {
-	return NewClientLog(server, maddr, mport, fast, leaderless, verbose, nil, "")
+	return NewClientLog(server, maddr, mport, fast, leaderless, verbose, nil)
 }
 
-func NewClientLog(server, maddr string, mport int, fast, leaderless, verbose bool, logger *dlog.Logger, alias string) *Client {
+func NewClientLog(server, maddr string, mport int, fast, leaderless, verbose bool, logger *dlog.Logger) *Client {
 	if logger == nil {
 		logger = dlog.New("", verbose)
 	}
@@ -62,7 +61,6 @@ func NewClientLog(server, maddr string, mport int, fast, leaderless, verbose boo
 		ClientId:  int32(uuid.New().ID()),
 		LeaderId:  -1,
 		ClosestId: -1,
-		Alias:     alias,
 
 		Fast:       fast,
 		Verbose:    verbose,
@@ -371,12 +369,6 @@ func (c *Client) findClosest(alive []bool) error {
 			c.Println(c.replicas[i], err)
 			return err
 		}
-	}
-
-	if c.Alias == "client1" {
-		c.ClosestId = 1
-	} else {
-		c.ClosestId = 2
 	}
 
 	if c.ClosestId == -1 {
