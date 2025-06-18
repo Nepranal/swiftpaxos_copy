@@ -435,12 +435,24 @@ func (r *Replica) fastAckFromLeader(msg *MFastAck, desc *commandDesc) {
 		msgCmdId := msg.CmdId
 		msgChecksum := msg.Checksum
 
-		fmt.Println("inequal dependencies", neq)
-		fmt.Println("desc dep:", desc.dep)
-		fmt.Println("dep:", dep)
+		if slow && neq {
+			r.Println("slow and not equal")
+			r.Println(msg.CmdId)
+		} else if slow && !neq {
+			r.Println("slow but equal dependencies")
+			r.Println(msg.CmdId)
+		} else if !slow && neq {
+			r.Println("not slow but not equal dependencies")
+			r.Println(msg.CmdId)
+		}
 
-		fmt.Println("SLOW:", slow)
-		fmt.Println("leader ID vs Replica ID", r.leader(), r.Id)
+		// fmt.Println("inequal dependencies", neq)
+		// fmt.Println("desc dep:", desc.dep)
+		// fmt.Println("dep:", dep)
+
+		// fmt.Println("SLOW:", slow)
+		// fmt.Println("leader ID vs Replica ID", r.leader(), r.Id)
+
 		// fmt.Println("Send slow ack?", sendSlowAck)
 		// if neq {
 		// 	time.Sleep(time.Duration(1<<63 - 1))

@@ -44,7 +44,7 @@
                 "roles": "client"
             }
         ],
-    "exp":6,
+    "exp":9,
     "protocol": "swiftpaxos",
     "config_file":"aws.conf"
 }
