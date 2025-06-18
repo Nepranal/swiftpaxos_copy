@@ -129,7 +129,7 @@ func runSingleClient(c *config.Config, i int, verbose bool) {
 
 	server := c.Proxy.ProxyOf(c.ClientAddrs[c.Alias])
 	server = c.ReplicaAddrs[server]
-	cl := client.NewClientLog(server, c.MasterAddr, c.MasterPort, c.Fast, c.Leaderless, verbose, l)
+	cl := client.NewClientLog(server, c.MasterAddr, c.MasterPort, c.Fast, c.Leaderless, verbose, l, c.Alias)
 	b := client.NewBufferClient(cl, c.Reqs, c.CommandSize, c.Conflicts, c.Writes, int64(c.Key)) // Creates new client
 	l.Println("Writes: ", c.Writes)
 	l.Println("Conflicts: ", c.Conflicts)
