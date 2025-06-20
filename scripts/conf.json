@@ -30,6 +30,20 @@
                 "roles": "replica"
             },
             {
+                "node_address": "ec2-15-157-58-138.ca-central-1.compute.amazonaws.com",
+                "user": "ubuntu",
+                "key_path": "~/.ssh/abel-exp-ca.pem",
+                "alias": "comp4",
+                "roles": "replica"
+            },
+            {
+                "node_address": "ec2-56-125-101-228.sa-east-1.compute.amazonaws.com",
+                "user": "ubuntu",
+                "key_path": "~/.ssh/abel-exp-sa.pem",
+                "alias": "comp5",
+                "roles": "replica"
+            },
+            {
                 "node_address": "ec2-35-75-5-94.ap-northeast-1.compute.amazonaws.com",
                 "user": "ubuntu",
                 "key_path": "~/.ssh/abel-exp.pem",
