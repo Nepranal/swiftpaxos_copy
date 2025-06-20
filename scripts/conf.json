@@ -114,7 +114,7 @@
                 "roles": "client"
             }
         ],
-    "exp":1000,
-    "protocol": "fastpaxos",
+    "exp":1001,
+    "protocol": "swiftpaxos",
     "config_file":"aws.conf"
 }
