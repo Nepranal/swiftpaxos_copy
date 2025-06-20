@@ -14,7 +14,7 @@ from utils import sorted_access_per_alias
 ROOT_PATH = "out"
 field_names = ["protocol", "latency", "percentage"]
 
-experiment_number = 12
+experiment_number = 1000
 folder_path = f"{ROOT_PATH}/exp{experiment_number}"
 protocols = [x for x in os.listdir(folder_path) if os.path.isdir(f"{folder_path}/{x}")]
 for protocol in protocols:
