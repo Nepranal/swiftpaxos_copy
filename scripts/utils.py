@@ -79,6 +79,43 @@ def sorted_access(path, variables, f):
         f.close()
     return variables
 
+def sorted_access_per_alias(path, variables, f):
+    alias_files = [open(f"{path}/transactions.csv")]
+    alias_readers = [csv.DictReader(x) for x in alias_files]
+    n = len(alias_readers)
+
+    if n == 0:
+        return variables
+
+    #Get total number of records
+    total_records = sum(1 for _ in alias_readers[0])
+    iterators = []
+    for i in range(1, n):
+        alias_files[i - 1].seek(0)
+        iterators.append(islice(alias_readers[i - 1], 1, None, None))
+        total_records += sum(1 for _ in alias_readers[i])
+    alias_files[n - 1].seek(0)
+    iterators.append(islice(alias_readers[n - 1], 1, None, None))
+
+    counts = [0 for _ in alias_readers]
+    rows = [next(iter, None) for iter in iterators]
+    latencies = [float(row["latency"]) if row is not None else float("inf") for row in rows]
+    idx = latencies.index(min(latencies))
+    counts[idx] += 1
+    while sum(counts)<=total_records:
+        row = rows[idx]
+        row["num_of_rows"] = total_records
+        variables = f(row, variables)
+
+        rows = [next(iter, None) if i == idx else rows[i] for i, iter in enumerate(iterators)]
+        latencies = [float(row["latency"]) if row is not None else float("inf") for row in rows]
+        idx = latencies.index(min(latencies))
+        counts[idx] += 1
+
+    for f in alias_files:
+        f.close()
+    return variables
+
 #Testing
 if __name__ == "__main__":
     print(aggregate_alias("out/exp1/swiftpaxos/client1/transactions.csv", [0], lambda row, variables: [variables[0] + 1]))

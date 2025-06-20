@@ -30,7 +30,7 @@ def get_stat(exp, protocol, alias):
         f.close()
     return table
 
-experiment_number = 9
+experiment_number = 2
 folder_path = f"{ROOT_PATH}/exp{experiment_number}"
 protocols = [x for x in os.listdir(folder_path) if os.path.isdir(f"{folder_path}/{x}")]
 
